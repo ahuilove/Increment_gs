@@ -6,3 +6,6 @@ diff_rasterization/diff_rast.egg-info
 diff_rasterization/dist
 tensorboard_3d
 screenshots
+stage1/chunk/
+stage1/oracle_camera_graph.json
+stage1/checkpoint/
