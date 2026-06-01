@@ -17,3 +17,9 @@
 [submodule "submodules/mast3r"]
 	path = submodules/mast3r
 	url = https://github.com/naver/mast3r.git
+[submodule "submodules/vggt-omega"]
+	path = submodules/vggt-omega
+	url = https://github.com/facebookresearch/vggt-omega.git
+[submodule "submodules/vggt-x"]
+	path = submodules/vggt-x
+	url = https://github.com/Linketic/VGGT-X.git
