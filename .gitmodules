@@ -23,3 +23,6 @@
 [submodule "submodules/vggt-x"]
 	path = submodules/vggt-x
 	url = https://github.com/Linketic/VGGT-X.git
+[submodule "submodules/instantsplat"]
+	path = submodules/instantsplat
+	url = https://github.com/NVlabs/InstantSplat.git
