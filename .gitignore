@@ -9,3 +9,6 @@ screenshots
 stage1/chunk/
 stage1/oracle_camera_graph.json
 stage1/checkpoint/
+stage1/chunk_largescale
+baseline
+stage1/output

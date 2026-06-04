@@ -113,7 +113,7 @@ def parse_args() -> argparse.Namespace:
     input_group.add_argument("--video", help="Input video path.")
     input_group.add_argument("--images", help="Input image folder.")
 
-    parser.add_argument("--checkpoint", required=True, help="Local VGGT-Omega checkpoint path.")
+    parser.add_argument("--checkpoint", default="stage1/checkpoint/vggt_omega_1b_512.pt", help="Local VGGT-Omega checkpoint path.")
     parser.add_argument("--output-dir", default=None, help="Output directory. Defaults to demo_outputs/input_images_TIMESTAMP.")
     parser.add_argument("--overwrite", action="store_true", help="Allow reusing and overwriting an existing output dir.")
     parser.add_argument("--image-resolution", type=int, default=512, help="Input image resolution. Default: 512.")
