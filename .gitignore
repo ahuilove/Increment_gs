@@ -12,3 +12,4 @@ stage1/checkpoint/
 stage1/chunk_largescale
 baseline
 stage1/output
+eval_output
