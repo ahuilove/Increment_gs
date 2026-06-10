@@ -13,3 +13,12 @@ stage1/chunk_largescale
 baseline
 stage1/output
 eval_output
+VGGT-Long/exps/
+VGGT-Long/build/
+VGGT-Long/dist/
+VGGT-Long/**/*.egg-info/
+VGGT-Long/**/__pycache__/
+VGGT-Long/**/*.pyc
+VGGT-Long/**/*.nbc
+VGGT-Long/**/*.nbi
+VGGT-Long/weights/

@@ -223,7 +223,88 @@ python eval/traj_eval.py \
   --output eval/longsplat_grass_test_eval
 ```
 
-### 5. 注意事项
+### 5. VGGT-Long 输出转 COLMAP
+
+VGGT-Long 运行结束后，实验目录一般包含：
+
+```text
+baseline/VGGT-Long/exps/<scene>/<timestamp>/
+  camera_poses.txt
+  intrinsic.txt
+  camera_poses.ply
+  pcd/
+    0_pcd.ply
+    1_pcd.ply
+    combined_pcd.ply
+```
+
+其中：
+
+- `camera_poses.txt`: 每张图一行，4x4 camera-to-world 矩阵。
+- `intrinsic.txt`: 每张图一行，`fx fy cx cy`。
+- `pcd/combined_pcd.ply`: 所有 chunk 合并后的采样点云，可选用于写入 COLMAP `points3D.txt`。
+
+VGGT-Long 自带转换脚本：
+
+```text
+baseline/VGGT-Long/convert_colmap.py
+```
+
+例如 grass 数据：
+
+```bash
+python baseline/VGGT-Long/convert_colmap.py \
+  --exp_dir baseline/VGGT-Long/exps/_home_zhanqh_dataset_city_free_dataset_grass_images/<timestamp> \
+  --image_dir /home/zhanqh/dataset/city/free_dataset/grass/images \
+  --pcd_file baseline/VGGT-Long/exps/_home_zhanqh_dataset_city_free_dataset_grass_images/<timestamp>/pcd/combined_pcd.ply \
+  --verbose
+```
+
+输出会写到：
+
+```text
+baseline/VGGT-Long/exps/.../<timestamp>/colmap/
+  cameras.txt
+  images.txt
+  points3D.txt
+```
+
+转换逻辑：
+
+- 读取 `camera_poses.txt` 中的 C2W。
+- 转成 COLMAP `images.txt` 需要的 W2C，即 `R_w2c = R_c2w.T`，`T = -R_w2c @ C`。
+- 读取 `intrinsic.txt` 写成 `PINHOLE` 相机模型。
+- 如果传入 `--pcd_file`，会把 PLY 点云写入 `points3D.txt`。这些点没有真实 track，主要用于可视化或作为下游初始化参考。
+
+VGGT-Long 预测内参是在模型预处理分辨率下得到的，`convert_colmap.py` 默认会根据原图尺寸做一个启发式缩放。常用参数：
+
+- `--pred_w`、`--pred_h`: 手动指定模型预测分辨率，用于更明确地缩放内参。
+- `--no-scale`: 不缩放内参，直接使用 `intrinsic.txt` 中的数值。
+- `--verbose`: 打印内参缩放诊断信息。
+
+转换后可以直接用 `traj_eval.py` 评价：
+
+```bash
+python eval/traj_eval.py \
+  --pred-sparse-dir baseline/VGGT-Long/exps/_home_zhanqh_dataset_city_free_dataset_grass_images/<timestamp>/colmap \
+  --gt-sparse-dir /home/zhanqh/dataset/city/free_dataset/grass/sparse/0 \
+  --output eval/vggt_long_grass_eval
+```
+
+如果你想整理成标准 COLMAP 数据集结构，可以创建：
+
+```text
+vggt_long_colmap/
+  images/
+  sparse/0/
+    cameras.txt
+    images.txt
+    points3D.txt
+```
+
+其中 `sparse/0` 里的三个文件来自 `exp_dir/colmap/`，`images/` 使用原始输入图像或软链接即可。
+
+### 6. 注意事项
 
 - 预测和真值通过图像名匹配，不通过 COLMAP image id 匹配。
 - COLMAP 存的是 world-to-camera，`traj_eval.py` 内部会转成 camera-to-world 后评价。
